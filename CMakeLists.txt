@@ -119,90 +119,90 @@ add_library(FastPFor STATIC src/bitpacking.cpp
 								)
 
 
-# other executables
-add_executable(gapstats src/gapstats.cpp)
-add_executable(partitionbylength src/partitionbylength.cpp)
-add_executable(csv2maropu src/csv2maropu.cpp)
+# # other executables
+# add_executable(gapstats src/gapstats.cpp)
+# add_executable(partitionbylength src/partitionbylength.cpp)
+# add_executable(csv2maropu src/csv2maropu.cpp)
 
-add_executable(entropy src/entropy.cpp)
-target_link_libraries(entropy FastPFor)
+# add_executable(entropy src/entropy.cpp)
+# target_link_libraries(entropy FastPFor)
 
-if( SUPPORT_SSE42 )
-    add_executable(benchbitpacking src/benchbitpacking.cpp)
-    target_link_libraries(benchbitpacking FastPFor)
-endif()
+# if( SUPPORT_SSE42 )
+#     add_executable(benchbitpacking src/benchbitpacking.cpp)
+#     target_link_libraries(benchbitpacking FastPFor)
+# endif()
 
-find_package(snappy)
-if(NOT ${snappy_FOUND})
-    message(STATUS "Snappy was not found. codecssnappy and "
-                   "inmemorybenchmarksnappy targets are not available.")
-else()
-    message(STATUS "Snappy was found. Building additional targets "
-                   "codecssnappy and inmemorybenchmarksnappy.")
-    include_directories(${snappy_INCLUDE_DIRS})
-    add_executable(codecssnappy src/codecs.cpp)
-    set_target_properties(codecssnappy PROPERTIES DEFINE_SYMBOL USESNAPPY)
-    target_link_libraries(codecssnappy FastPFor ${snappy_LIBRARIES})
+# find_package(snappy)
+# if(NOT ${snappy_FOUND})
+#     message(STATUS "Snappy was not found. codecssnappy and "
+#                    "inmemorybenchmarksnappy targets are not available.")
+# else()
+#     message(STATUS "Snappy was found. Building additional targets "
+#                    "codecssnappy and inmemorybenchmarksnappy.")
+#     include_directories(${snappy_INCLUDE_DIRS})
+#     add_executable(codecssnappy src/codecs.cpp)
+#     set_target_properties(codecssnappy PROPERTIES DEFINE_SYMBOL USESNAPPY)
+#     target_link_libraries(codecssnappy FastPFor ${snappy_LIBRARIES})
 
-    add_executable(inmemorybenchmarksnappy src/inmemorybenchmark.cpp)
-    set_target_properties(inmemorybenchmarksnappy PROPERTIES DEFINE_SYMBOL USESNAPPY)
-    target_link_libraries(inmemorybenchmarksnappy FastPFor ${snappy_LIBRARIES})
-endif()
+#     add_executable(inmemorybenchmarksnappy src/inmemorybenchmark.cpp)
+#     set_target_properties(inmemorybenchmarksnappy PROPERTIES DEFINE_SYMBOL USESNAPPY)
+#     target_link_libraries(inmemorybenchmarksnappy FastPFor ${snappy_LIBRARIES})
+# endif()
 
-# Download and unpack googletest at configure time
-configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
-execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
-  RESULT_VARIABLE result
-  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
-if(result)
-  message(FATAL_ERROR "CMake step for googletest failed: ${result}")
-endif()
-execute_process(COMMAND ${CMAKE_COMMAND} --build .
-  RESULT_VARIABLE result
-  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
-if(result)
-  message(FATAL_ERROR "Build step for googletest failed: ${result}")
-endif()
+# # Download and unpack googletest at configure time
+# configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
+# execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+#   RESULT_VARIABLE result
+#   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
+# if(result)
+#   message(FATAL_ERROR "CMake step for googletest failed: ${result}")
+# endif()
+# execute_process(COMMAND ${CMAKE_COMMAND} --build .
+#   RESULT_VARIABLE result
+#   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/googletest-download )
+# if(result)
+#   message(FATAL_ERROR "Build step for googletest failed: ${result}")
+# endif()
 
-# Prevent GoogleTest from overriding our compiler/linker options
-# when building with Visual Studio
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+# # Prevent GoogleTest from overriding our compiler/linker options
+# # when building with Visual Studio
+# set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-# Add googletest directly to our build. This adds
-# the following targets: gtest, gtest_main, gmock
-# and gmock_main
-add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
-                 ${CMAKE_CURRENT_BINARY_DIR}/googletest-build
-                 EXCLUDE_FROM_ALL)
+# # Add googletest directly to our build. This adds
+# # the following targets: gtest, gtest_main, gmock
+# # and gmock_main
+# add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
+#                  ${CMAKE_CURRENT_BINARY_DIR}/googletest-build
+#                  EXCLUDE_FROM_ALL)
 
-# The gtest/gmock targets carry header search path
-# dependencies automatically when using CMake 2.8.11 or
-# later. Otherwise we have to add them here ourselves.
-if(CMAKE_VERSION VERSION_LESS 2.8.11)
-    include_directories("${gtest_SOURCE_DIR}/include"
-                        "${gmock_SOURCE_DIR}/include")
-endif()
+# # The gtest/gmock targets carry header search path
+# # dependencies automatically when using CMake 2.8.11 or
+# # later. Otherwise we have to add them here ourselves.
+# if(CMAKE_VERSION VERSION_LESS 2.8.11)
+#     include_directories("${gtest_SOURCE_DIR}/include"
+#                         "${gmock_SOURCE_DIR}/include")
+# endif()
 
-add_executable(codecs src/codecs.cpp)
-target_link_libraries(codecs FastPFor)
+# add_executable(codecs src/codecs.cpp)
+# target_link_libraries(codecs FastPFor)
 
-add_executable(example example.cpp)
-target_link_libraries(example FastPFor)
+# add_executable(example example.cpp)
+# target_link_libraries(example FastPFor)
 
-add_executable(inmemorybenchmark src/inmemorybenchmark.cpp)
-target_link_libraries(inmemorybenchmark FastPFor)
+# add_executable(inmemorybenchmark src/inmemorybenchmark.cpp)
+# target_link_libraries(inmemorybenchmark FastPFor)
 
-add_executable(unit src/unit.cpp)
-target_link_libraries(unit FastPFor)
-add_custom_target(check unit DEPENDS unit)
+# add_executable(unit src/unit.cpp)
+# target_link_libraries(unit FastPFor)
+# add_custom_target(check unit DEPENDS unit)
 
 
-add_executable(FastPFor_unittest
-    unittest/test_composite.cpp
-    unittest/test_driver.cpp
-    unittest/test_fastpfor.cpp
-    unittest/test_variablebyte.cpp)
-target_link_libraries(FastPFor_unittest gtest FastPFor)
-enable_testing()
-add_test("unit" unit)
-add_test("FastPFor_unittest" FastPFor_unittest)
+# add_executable(FastPFor_unittest
+#     unittest/test_composite.cpp
+#     unittest/test_driver.cpp
+#     unittest/test_fastpfor.cpp
+#     unittest/test_variablebyte.cpp)
+# target_link_libraries(FastPFor_unittest gtest FastPFor)
+# enable_testing()
+# add_test("unit" unit)
+# add_test("FastPFor_unittest" FastPFor_unittest)
